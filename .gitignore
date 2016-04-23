@@ -1,0 +1,16 @@
+# Editor temporaries
+*~
+*.swp
+
+# OSX dir files
+.DS_Store
+
+# Compiled python
+*.pyc
+
+
+# IPython notebook checkpoints
+*/.ipynb_checkpoints
+
+# Result Folders
+Results/*
