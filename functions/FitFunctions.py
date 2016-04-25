@@ -1,6 +1,6 @@
 import ROOT
 
-from FunctionsPrototypes import *
+from FunctionsTypes import *
 
 def fitBukin(hist,min,max,fit_type):
     n_par_bukin = 6
