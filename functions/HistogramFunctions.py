@@ -79,6 +79,8 @@ def Draw1DHistInCanvas(list_hist,hist_id,canvas,fit_function = "",fit_type = "")
     hist_pave_text.SetFillColor(ROOT.kNone)
     hist_pave_text.Draw()
     
+    canvas.Update()
+    
     if (fit_function != ""):
         function = Fit1DHist(hist,fit_function,fit_type)
         function.SetLineColor(hist.GetLineColor())
