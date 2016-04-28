@@ -67,7 +67,7 @@ def Draw1DHists(list_hist,output_path,fit_function = "",fit_type = ""):
     
     return
 
-def Draw1DHistInCanvas(list_hist,hist_id,canvas,fit_function = "",fit_type = ""):
+def Draw1DHistInCanvas(list_hist,hist_id,canvas,subcanvas = "",fit_function = "",fit_type = ""):
     
     canvas.cd()
     
@@ -80,6 +80,19 @@ def Draw1DHistInCanvas(list_hist,hist_id,canvas,fit_function = "",fit_type = "")
     hist_pave_text.Draw()
     
     canvas.Update()
+    
+    if (subcanvas != ""):
+        canvas.cd(subcanvas)
+    
+        hist = list_hist[hist_id]
+        hist.Draw()
+        hist_pave_text = ROOT.TPaveText(0.6, 0.75, 0.9, 0.9, "NDC")
+        hist_pave_text = FigureFunctions.GetHistInfo(hist,hist_pave_text)
+        hist_pave_text.SetBorderSize(1)
+        hist_pave_text.SetFillColor(ROOT.kNone)
+        hist_pave_text.Draw()
+    
+        canvas.Update(subcanvas)    
     
     if (fit_function != ""):
         function = Fit1DHist(hist,fit_function,fit_type)
