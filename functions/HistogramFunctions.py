@@ -1,5 +1,6 @@
 import ROOT
 import FigureFunctions
+import copy
 
 class OneDimHistInfo:
     title = ''
@@ -67,32 +68,20 @@ def Draw1DHists(list_hist,output_path,fit_function = "",fit_type = ""):
     
     return
 
-def Draw1DHistInCanvas(list_hist,hist_id,canvas,subcanvas = "",fit_function = "",fit_type = ""):
+def Draw1DHistInCanvas(list_hist,hist_id,canvas,fit_function = "",fit_type = ""):
     
     canvas.cd()
     
     hist = list_hist[hist_id]
+    hist.SetLineWidth(1)
     hist.Draw()
     hist_pave_text = ROOT.TPaveText(0.6, 0.75, 0.9, 0.9, "NDC")
     hist_pave_text = FigureFunctions.GetHistInfo(hist,hist_pave_text)
     hist_pave_text.SetBorderSize(1)
     hist_pave_text.SetFillColor(ROOT.kNone)
-    hist_pave_text.Draw()
+    hist_pave_text.Draw("same")
     
     canvas.Update()
-    
-    if (subcanvas != ""):
-        canvas.cd(subcanvas)
-    
-        hist = list_hist[hist_id]
-        hist.Draw()
-        hist_pave_text = ROOT.TPaveText(0.6, 0.75, 0.9, 0.9, "NDC")
-        hist_pave_text = FigureFunctions.GetHistInfo(hist,hist_pave_text)
-        hist_pave_text.SetBorderSize(1)
-        hist_pave_text.SetFillColor(ROOT.kNone)
-        hist_pave_text.Draw()
-    
-        canvas.Update(subcanvas)    
     
     if (fit_function != ""):
         function = Fit1DHist(hist,fit_function,fit_type)
@@ -109,6 +98,90 @@ def Draw1DHistInCanvas(list_hist,hist_id,canvas,subcanvas = "",fit_function = ""
         hist_pave_text.Draw()
     return canvas
 
+def DrawList1DHistInCanvas(clone_list, ntitle, nxlabel, nylabel, canvas):
+    
+      
+
+#    print "Clone List =",  clone_list
+    
+    
+    canvas.cd()
+
+    
+    #detect max value
+    max_hist = -9999
+    id_hist = -1
+    for (i,iaux) in enumerate(clone_list):
+        if clone_list[i].GetBinContent(clone_list[i].GetMaximumBin()) > max_hist:
+            max_hist = clone_list[i].GetBinContent(clone_list[i].GetMaximumBin())
+            id_hist = i
+    
+    aux = clone_list[id_hist].GetTitle()
+    xaux = clone_list[id_hist].GetXaxis().GetTitle()
+    yaux = clone_list[id_hist].GetYaxis().GetTitle()
+    clone_list[id_hist].SetTitle(ntitle)
+    clone_list[id_hist].GetXaxis().SetTitle(nxlabel)
+    clone_list[id_hist].GetYaxis().SetTitle(nxlabel)
+    clone_list[id_hist].Draw("same")
+    clone_list[id_hist].SetTitle(aux)    
+    clone_list[id_hist].GetXaxis().SetTitle(xaux)
+    clone_list[id_hist].GetYaxis().SetTitle(yaux)    
+    
+    # draw the histograms
+    leg = ROOT.TLegend(0.5,0.75,0.9,0.9)
+    leg.SetFillColor(ROOT.kNone)
+    
+    list_pave = []
+    size_vertical = 0.15
+    
+    # change automatically the size of each Pavel 
+    while (0.75 -size_vertical*(len(clone_list)/2) < 0.2):
+        size_vertical -= 0.005
+    
+    for (i,iaux) in enumerate(clone_list):
+        leg.AddEntry(clone_list[i],clone_list[i].GetTitle(),"l");
+        
+        horizontal_start = 0.0
+        horizontal_end = 0.0
+        
+        vertical_start = 0.0
+        vertical_end = 0.0
+        
+        if i%2 == 0:
+            horizontal_start = 0.5 
+            horizontal_end = 0.7
+        else:
+            horizontal_start = 0.7
+            horizontal_end = 0.9
+        
+        vertical_start = 0.75 -size_vertical*(i/2 + 1)
+        vertical_end = 0.75 -size_vertical*(i/2)
+        
+        list_pave.append(ROOT.TPaveText(horizontal_start, vertical_start, horizontal_end, vertical_end, "NDC"))
+        
+        list_pave[i] = FigureFunctions.GetHistInfo(clone_list[i],list_pave[i])
+        aux = clone_list[i].GetTitle()
+        xaux = clone_list[i].GetXaxis().GetTitle()
+        yaux = clone_list[i].GetYaxis().GetTitle()
+        clone_list[i].SetTitle(ntitle)
+        clone_list[i].GetXaxis().SetTitle(nxlabel)
+        clone_list[i].GetYaxis().SetTitle(nylabel)
+        clone_list[i].SetFillStyle(0)
+        clone_list[i].Draw("same")
+        #list_hist[i].SetTitle(aux)    
+        #list_hist[i].GetXaxis().SetTitle(xaux)
+        #list_hist[i].GetYaxis().SetTitle(yaux)
+    
+       
+    leg.Draw()
+    for (i,iaux) in enumerate(list_pave):
+        list_pave[i].SetBorderSize(1)
+        list_pave[i].SetFillColor(ROOT.kNone)
+        list_pave[i].Draw("same")
+    
+    #canvas.Print("Analysis.pdf")
+    
+    return canvas
 
 def Fit1DHist(hist, function_name, fit_type):
     if (function_name == "bukin"):
