@@ -1,6 +1,9 @@
 import ROOT
+from ROOT import TLatex,TPad,TList,TH1,TH1F,TH2F,TH1D,TH2D,TFile,TTree,TCanvas,TLegend,SetOwnership,gDirectory,TObject,gStyle,gROOT,TLorentzVector,TGraph,TMultiGraph,TColor,TAttMarker,TLine,TDatime,TGaxis,TF1,THStack,TAxis,TStyle,TPaveText,TAttFill
 import FigureFunctions
 import copy
+
+
 
 class OneDimHistInfo:
     title = ''
@@ -68,20 +71,34 @@ def Draw1DHists(list_hist,output_path,fit_function = "",fit_type = ""):
     
     return
 
-def Draw1DHistInCanvas(list_hist,hist_id,canvas,fit_function = "",fit_type = ""):
-    
+def Legend(hist,canvas):
     canvas.cd()
-    
-    hist = list_hist[hist_id]
-    hist.SetLineWidth(1)
-    hist.Draw()
     hist_pave_text = ROOT.TPaveText(0.6, 0.75, 0.9, 0.9, "NDC")
     hist_pave_text = FigureFunctions.GetHistInfo(hist,hist_pave_text)
     hist_pave_text.SetBorderSize(1)
     hist_pave_text.SetFillColor(ROOT.kNone)
-    hist_pave_text.Draw("same")
-    
+    hist_pave_text.Draw()
     canvas.Update()
+    ROOT.SetOwnership(hist_pave_text,0)
+    return 
+
+def Draw1DHistInCanvas(list_hist,hist_id,canvas,fit_function = "",fit_type = ""):
+    
+    c = canvas.cd()
+    
+    
+    
+    hist = list_hist[hist_id]
+    hist.SetLineWidth(1)
+    hist.Draw("same")
+    legend = Legend(hist,c)
+    #hist_pave_text = ROOT.TPaveText(0.6, 0.75, 0.9, 0.9, "NDC")
+    #hist_pave_text = FigureFunctions.GetHistInfo(hist,hist_pave_text)
+    #hist_pave_text.SetBorderSize(1)
+    #hist_pave_text.SetFillColor(ROOT.kNone)
+    #hist_pave_text.Draw()
+    
+    c.Update()
     
     if (fit_function != ""):
         function = Fit1DHist(hist,fit_function,fit_type)
@@ -96,18 +113,13 @@ def Draw1DHistInCanvas(list_hist,hist_id,canvas,fit_function = "",fit_type = "")
       
         function_pave_text.Draw()
         hist_pave_text.Draw()
-    return canvas
+    return 
 
+# you need make a clone list to use this function for plot without lose your list
 def DrawList1DHistInCanvas(clone_list, ntitle, nxlabel, nylabel, canvas):
     
-      
-
-#    print "Clone List =",  clone_list
-    
-    
-    canvas.cd()
-
-    
+    c = canvas.cd()
+    print "canvas", c
     #detect max value
     max_hist = -9999
     id_hist = -1
@@ -177,11 +189,11 @@ def DrawList1DHistInCanvas(clone_list, ntitle, nxlabel, nylabel, canvas):
     for (i,iaux) in enumerate(list_pave):
         list_pave[i].SetBorderSize(1)
         list_pave[i].SetFillColor(ROOT.kNone)
-        list_pave[i].Draw("same")
-    
+        list_pave[i].Draw()
+        ROOT.SetOwnership(list_pave[i],0)
     #canvas.Print("Analysis.pdf")
     
-    return canvas
+    return 
 
 def Fit1DHist(hist, function_name, fit_type):
     if (function_name == "bukin"):
