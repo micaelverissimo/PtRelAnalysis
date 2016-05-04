@@ -146,9 +146,10 @@ def DrawList1DHistInCanvas(clone_list, ntitle, nxlabel, nylabel, canvas):
     
     list_pave = []
     size_vertical = 0.15
+    LegendLimits = 0.90
     
     # change automatically the size of each Pavel 
-    while (0.75 -size_vertical*(len(clone_list)/2) < 0.2):
+    while (LegendLimits -size_vertical*(len(clone_list)/2) < 0.2):
         size_vertical -= 0.005
     
     for (i,iaux) in enumerate(clone_list):
@@ -167,8 +168,8 @@ def DrawList1DHistInCanvas(clone_list, ntitle, nxlabel, nylabel, canvas):
             horizontal_start = 0.7
             horizontal_end = 0.9
         
-        vertical_start = 0.75 -size_vertical*(i/2 + 1)
-        vertical_end = 0.75 -size_vertical*(i/2)
+        vertical_start = LegendLimits -size_vertical*(i/2 + 1)
+        vertical_end = LegendLimits -size_vertical*(i/2)
         
         list_pave.append(ROOT.TPaveText(horizontal_start, vertical_start, horizontal_end, vertical_end, "NDC"))
         
