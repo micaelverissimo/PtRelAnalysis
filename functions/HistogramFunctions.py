@@ -53,6 +53,7 @@ def Draw1DHists(list_hist,output_path,fit_function = "",fit_type = ""):
         hist_pave_text.SetBorderSize(1)
         hist_pave_text.SetFillColor(ROOT.kNone)
         hist_pave_text.Draw()
+        ROOT.SetOwnership(hist_pave_text,0)
         c.Print(output_path+'/'+hist.GetName()+'.pdf')
         if (fit_function != ""):
             function = Fit1DHist(hist,fit_function,fit_type)
@@ -91,13 +92,13 @@ def Draw1DHistInCanvas(list_hist,hist_id,canvas,fit_function = "",fit_type = "")
     hist = list_hist[hist_id]
     hist.SetLineWidth(1)
     hist.Draw("same")
-    legend = Legend(hist,c)
-    #hist_pave_text = ROOT.TPaveText(0.6, 0.75, 0.9, 0.9, "NDC")
-    #hist_pave_text = FigureFunctions.GetHistInfo(hist,hist_pave_text)
-    #hist_pave_text.SetBorderSize(1)
-    #hist_pave_text.SetFillColor(ROOT.kNone)
-    #hist_pave_text.Draw()
-    
+    #legend = Legend(hist,c)
+    hist_pave_text = ROOT.TPaveText(0.6, 0.75, 0.9, 0.9, "NDC")
+    hist_pave_text = FigureFunctions.GetHistInfo(hist,hist_pave_text)
+    hist_pave_text.SetBorderSize(1)
+    hist_pave_text.SetFillColor(ROOT.kNone)
+    hist_pave_text.Draw()
+    ROOT.SetOwnership(hist_pave_text,0)
     c.Update()
     
     if (fit_function != ""):
