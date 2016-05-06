@@ -181,11 +181,11 @@ def DrawList1DHistInCanvas(clone_list, ntitle, nxlabel, nylabel, canvas, output_
         clone_list[i].GetXaxis().SetTitle(nxlabel)
         clone_list[i].GetYaxis().SetTitle(nylabel)
         clone_list[i].SetFillStyle(0)
+        clone_list[i].SetLineWidth(1)
         clone_list[i].Draw("same")
         #list_hist[i].SetTitle(aux)    
         #list_hist[i].GetXaxis().SetTitle(xaux)
         #list_hist[i].GetYaxis().SetTitle(yaux)
-    
        
     leg.Draw()
     for (i,iaux) in enumerate(list_pave):
