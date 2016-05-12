@@ -36,8 +36,11 @@ def CreateListOf1DHistograms(list_1dinfos,list_colors):
             
     for (i,hist_info) in  enumerate(list_1dinfos):
         histo = ROOT.TH1F(hist_info.name,hist_info.title,hist_info.nbins,hist_info.min,hist_info.max)
+        
+        histo.GetXaxis().SetTitleOffset(1.4)
+        histo.GetYaxis().SetTitleOffset(1.5)
         histo.GetXaxis().SetTitle(hist_info.xlabel)
-        histo.GetYaxis().SetTitle(hist_info.ylabel)
+        histo.GetYaxis().SetTitle(hist_info.ylabel)        
         histo.SetLineWidth(2)
         histo.SetLineColor(list_colors[i])
         list_hists.append(histo)
@@ -180,6 +183,8 @@ def DrawList1DHistInCanvas(clone_list, ntitle, nxlabel, nylabel, canvas, output_
         clone_list[i].SetTitle(ntitle)
         clone_list[i].GetXaxis().SetTitle(nxlabel)
         clone_list[i].GetYaxis().SetTitle(nylabel)
+        clone_list[i].GetXaxis().SetTitleOffset(1.4)
+        clone_list[i].GetYaxis().SetTitleOffset(1.8)
         clone_list[i].SetFillStyle(0)
         clone_list[i].SetLineWidth(1)
         clone_list[i].Draw("same")
