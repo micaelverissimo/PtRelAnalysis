@@ -6,6 +6,7 @@ def GetHistInfo(hist,return_pave):
     
     return_pave.SetTextColor(hist.GetLineColor())
     return_pave.AddText(hist.GetTitle())
+    #return_pave.AddText("Entries: "+str(hist.GetEntries()))
     return_pave.AddText("Mean: "+str(round(hist.GetMean(),3))+" +- "+str(round(hist.GetMeanError(),3)))
     return_pave.AddText("Var: "+str(round(hist.GetRMS(),3))+" +- "+str(round(hist.GetRMSError(),3)))
     return_pave.AddText("MOP: "+str(hist.GetBinCenter(hist.GetMaximumBin())))

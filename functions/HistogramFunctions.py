@@ -120,10 +120,10 @@ def Draw1DHistInCanvas(list_hist,hist_id,canvas,fit_function = "",fit_type = "")
     return 
 
 # you need make a clone list to use this function for plot without lose your list
-def DrawList1DHistInCanvas(clone_list, ntitle, nxlabel, nylabel, canvas, output_path = ""):
+def DrawList1DHistInCanvas(clone_list, ntitle, nxlabel, nylabel, canvas):
     
-    c = canvas.cd()
-    print "canvas", c
+    canvas.cd()
+    #print "canvas", c
     #detect max value
     max_hist = -9999
     id_hist = -1
@@ -198,8 +198,8 @@ def DrawList1DHistInCanvas(clone_list, ntitle, nxlabel, nylabel, canvas, output_
         list_pave[i].SetFillColor(ROOT.kNone)
         list_pave[i].Draw()
         ROOT.SetOwnership(list_pave[i],0)
-    if (output_path != ""):
-        c.Print(output_path+'/'+'AllLevels.pdf')
+    
+    canvas.Update()
     
     return 
 
