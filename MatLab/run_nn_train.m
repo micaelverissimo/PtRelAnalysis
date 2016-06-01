@@ -42,13 +42,8 @@ inputs_label = {'Pt_EM', 'Eta_EM', 'Phi_EM', 'E_EM', 'PtRel_EM', 'FracEM3', 'Fra
 clear('fid','C','input_file_name','inputs1','inputs2','inputs3','inputs4','inputs5','inputs6','inputs7','inputs8','inputs9','inputs10','inputs11', 'inputs12', 'inputs13', 'inputs14', 'inputs15', 'inputs16', 'inputs17', 'inputs18', 'inputs19', 'inputs20', 'inputs21', 'inputs22', 'inputs23', 'inputs24', 'inputs25', 'inputs26', 'inputs27', 'inputs28', 'inputs29', 'inputs30', 'inputs31', 'inputs32', 'inputs33', 'inputs34', 'inputs35' , 'inputs36', 'inputs37');
 
 
-%select_inputs = [1 2 3 4 5 6 7 8 9 10 11 12 13]; % all
-select_inputs = 1:size(inputs,2); % reco_pt
-%select_inputs = [1 5]; % reco_pt, MuEffectPt
-%select_inputs = [1 7]; % reco_pt, SumPtTrk
-%select_inputs = [1 5 7]; % reco_pt, MuEffectPt, SumPtTrk
-%select_inputs = [1 6 7]; % RecoPt, NTrk, SumPtTrk
-%select_inputs = [1 5 6 7]; % RecoPt, MuEffectPt, NTrk, SumPtTrk
+select_inputs = [6 7 8 9 10 11 12 18 19 20 21 22 33]; % all
+%select_inputs = 1:size(inputs,2); % reco_pt
 
 
 inputs = inputs(:,select_inputs);
@@ -68,17 +63,13 @@ inputs_label = inputs_label(select_inputs);
 % saveas(gcf,'autocorr.jpg');
 % close(gcf);
 
-return;
-
 % 3 - Split Training Sets (train, test, validation)
 fprintf('Split Training Sets\n');
 n_tests = 10;
-CVO = cvpartition(length(targets),'Kfold',n_tests); % split into n_tests tests
+CVO = cvpartition(size(inputs,1),'Kfold',n_tests); % split into n_tests tests
 trn_id =  CVO.training(1); % taking the first one
 tst_id =  CVO.test(1); % taking the first one
 val_id = tst_id; % test = validation -> small statistics
-
-
 
 % turn trn_id, tst_id in integers  to use in NN training process
 itrn = [];
@@ -97,14 +88,16 @@ ival = itst;
 
 % 2 - Using train set to extract normalization factors
 fprintf('Normalizing Inputs\n');
+
+
 inputs_norm = [];
 ps = [];
-truth_pt = targets.*inputs(:,1);
-[a,b] = hist(truth_pt,100);
+truth_pt = inputs(:,end);
+[a,b] = hist(truth_pt(itrn,:),100);
 peak_truth_pt = b(find(a==max(a)));
-if false
+if true
     % mean = 0, var = 1
-    [~,ps] = mapstd(inputs(trn_id,:)'); % ps - normalization factors
+    [~,ps] = mapstd(inputs(itrn,:)'); % ps - normalization factors
     % applying normalization in all events
     % mapstd -> mean = 0, std = 1;
     inputs_norm =  mapstd('apply',inputs',ps)';
@@ -115,19 +108,38 @@ else
     inputs_norm = ps.gain(1)*inputs; 
 end
 
+% Output
+fprintf('Normalizing Outputs\n');
+ps = [];
+truth_pt = inputs(:,end);
+[a,b] = hist(truth_pt(itrn,:),100);
+peak_truth_pt = b(find(a==max(a)));
+if false
+    % truth_pt/reco_pt
+    truth_pt_norm=truth_pt./inputs(:,8);
+else
+    % truth_pt/mop(truth_pt)
+    truth_pt_norm=truth_pt./peak_truth_pt;
+end
+
+nn_inputs=inputs_norm(:,1:end-1);
+nn_target=truth_pt_norm;
+
+
 % 4 - Training Process
 fprintf('Training Process\n');
 
 top = 10; % number of neurons in hidden layer
-train_fnc = 'trainscg'; % weights update function
-%perf_fnc = 'mse'; % error function % without regularization
-perf_fnc = 'msereg'; % error function % with regularization
+train_fnc = 'trainlm'; % weights update function
+perf_fnc = 'mse'; % error function % without regularization
+%perf_fnc = 'msereg'; % error function % with regularization
 act_fnc = {'tansig' 'purelin'}; % activation function
-n_epochs = 10000;
+n_epochs = 100;
+
 show = true;
 
-[trained_nn, train_description] = train_neural_network(inputs_norm', targets', itrn, ival, itst, top, train_fnc, perf_fnc, act_fnc, n_epochs, show);
-
+[trained_nn, train_description] = train_neural_network(nn_inputs', nn_target', itrn, ival, itst, top, train_fnc, perf_fnc, act_fnc, n_epochs, show);
+return
 nn_output = sim(trained_nn, inputs_norm');
 
 
