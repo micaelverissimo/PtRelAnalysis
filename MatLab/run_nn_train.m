@@ -117,7 +117,7 @@ for i = 1:n_tests
     truth_pt = inputs(:,end);
     [a,b] = hist(truth_pt(itrn,:),100);
     peak_truth_pt = b(find(a==max(a)));
-    if true
+    if false
         % truth_pt/reco_pt
         truth_pt_norm=truth_pt./inputs(:,8);
     else
@@ -151,14 +151,14 @@ fprintf('Result Analysis\n');
 
 % train analysis
 plotperform(train_description);
-fig2pdf(gcf,'training_description.pdf');
+fig2pdf(gcf,'training_description_truth_pt/mop(truth_pt).pdf');
 close(gcf);
 
 
 hist((targets'-nn_output),100);
 title('Error Histogram','FontSize', 15,'FontWeight', 'bold');
 xlabel('Error Values','FontSize', 15,'FontWeight', 'bold');
-fig2pdf(gcf,'error_hist.pdf');
+fig2pdf(gcf,'error_hist_truth_pt/mop(truth_pt).pdf');
 close(gcf);
 return
 
