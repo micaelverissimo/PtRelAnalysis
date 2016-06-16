@@ -117,7 +117,7 @@ for i = 1:n_tests
     truth_pt = inputs(:,end);
     [a,b] = hist(truth_pt(itrn,:),100);
     peak_truth_pt = b(find(a==max(a)));
-    if false
+    if true
         % truth_pt/reco_pt
         truth_pt_norm=truth_pt./inputs(:,8);
     else
@@ -151,15 +151,21 @@ fprintf('Result Analysis\n');
 
 % train analysis
 plotperform(train_description);
-fig2pdf(gcf,'training_description_truth_pt/mop(truth_pt).pdf');
+fig2pdf(gcf,'training_description_truth_pt_over_reco_pt.pdf');
 close(gcf);
 
 
 hist((targets'-nn_output),100);
 title('Error Histogram','FontSize', 15,'FontWeight', 'bold');
 xlabel('Error Values','FontSize', 15,'FontWeight', 'bold');
-fig2pdf(gcf,'error_hist_truth_pt/mop(truth_pt).pdf');
+fig2pdf(gcf,'error_hist_truth_pt_over_reco_pt.pdf');
 close(gcf);
+
+scatter(nn_target',nn_output')
+xlabel('Target','FontSize', 15,'FontWeight', 'bold');
+ylabel('Output','FontSize', 15,'FontWeight', 'bold');
+title('Scatter Plot','FontSize', 15,'FontWeight', 'bold');
+fig2pdf(gcf,'scatterplot_truth_pt_over_reco_pt.pdf');
 return
 
 %input_labels = {sprintf('((reco_pt-%1.6f)*%1.6f)', ps.xoffset(1), ps.gain(1))};
