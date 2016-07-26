@@ -56,10 +56,10 @@ inputs_label = inputs_label(select_inputs);
  title('AutoCorrelation Matrix','FontSize', 15,'FontWeight', 'bold');
  set(gca,'XTick',1:size(inputs,2));
  set(gca,'YTick',1:size(inputs,2));
- set(gca,'XTickLabel',inputs_label);
+ set(gca,'XTickLabel');
  set(gca,'YTickLabel',inputs_label);
  %rotateXLabels(gca,90); 
-% fig2pdf(gcf,'autocorr.pdf');
+ fig2pdf(gcf,'autocorr.pdf');
 % saveas(gcf,'autocorr.jpg');
 % close(gcf);
 
@@ -117,7 +117,7 @@ for i = 1:n_tests
     truth_pt = inputs(:,end);
     [a,b] = hist(truth_pt(itrn,:),100);
     peak_truth_pt = b(find(a==max(a)));
-    if true
+    if false
         % truth_pt/reco_pt
         truth_pt_norm=truth_pt./inputs(:,8);
     else
@@ -145,52 +145,59 @@ for i = 1:n_tests
 
     nn_output = sim(trained_nn, inputs_norm');
 
+
+    % 5 - Result Analysis
+    fprintf('Result Analysis\n');
+
+    % train analysis
+    %plotperform(train_description);
+    %fig2pdf(gcf,'training_description_truth_pt_over_moptruth_pt.pdf');
+    %close(gcf);
+
+    %hist(nn_target',100);
+    %title('Target Distribution','FontSize', 15,'FontWeight','bold');
+    %xlabel('$$\frac{Pt_{truth}}{MOP(Pt_{Truth})}$$','Interpreter','Latex','FontSize', 16);; %using LateX
+    %fig2pdf(gcf,'target_hist_truth_pt_over_moptruth_pt.pdf');
+    %close(gcf);
+
+    %hist((nn_target'-nn_output),100);
+    %title('Error Histogram','FontSize', 15,'FontWeight', 'bold');
+    %xlabel('Error Values','FontSize', 15,'FontWeight', 'bold');
+    %fig2pdf(gcf,'error_hist_truth_pt_over_moptruth_pt.pdf');
+    %close(gcf);
+
+    %scatter(nn_target',nn_output')
+    %xlabel('Target','FontSize', 15,'FontWeight', 'bold');
+    %ylabel('Output','FontSize', 15,'FontWeight', 'bold');
+    %title('Scatter Plot','FontSize', 15,'FontWeight', 'bold');
+    %fig2pdf(gcf,'scatterplot_truth_pt_over_moptruth_pt.pdf');
+    %close(gcf);
+
+
+    %input_labels = {sprintf('((reco_pt-%1.6f)*%1.6f)', ps.xoffset(1), ps.gain(1))};
+    % export a formula
+    fprintf('Export Formula\n');
+    Formula_labels = {};
+    for i = 1:length(select_inputs)
+        Formula_labels{i} = sprintf('((%s-%1.6f)*%1.6f)', inputs_label{i}, ps.xoffset(i), ps.gain(i));
+    end
+
+    fprintf('Out: %s\n',GetNNFormula(trained_nn,'TMath::TanH',Formula_labels));
+    %fprintf('Out: %s\n',GetNNFormula(trained_nn,{'reco_norm'}));
+
+    nn_resul = sim(trained_nn, inputs_norm(1));
+
+    y1 = tansig(trained_nn.IW{1,:}*inputs_norm(1,:)' + trained_nn.b{1});
+    m_resul = trained_nn.LW{2,:}*y1+ trained_nn.b{2};
+
+    diff_resul = nn_resul - m_resul;
+    fprintf('diff between results: %1.6f\n',diff_resul);
+
+
+    fprintf('Exporting Functions\n');
+    rmpath(genpath('EFunctions'));
+
+
+    fprintf('THE END!!!\n');
 end
-% 5 - Result Analysis
-fprintf('Result Analysis\n');
-
-% train analysis
-plotperform(train_description);
-fig2pdf(gcf,'training_description_truth_pt_over_reco_pt.pdf');
-close(gcf);
-
-
-hist((targets'-nn_output),100);
-title('Error Histogram','FontSize', 15,'FontWeight', 'bold');
-xlabel('Error Values','FontSize', 15,'FontWeight', 'bold');
-fig2pdf(gcf,'error_hist_truth_pt_over_reco_pt.pdf');
-close(gcf);
-
-scatter(nn_target',nn_output')
-xlabel('Target','FontSize', 15,'FontWeight', 'bold');
-ylabel('Output','FontSize', 15,'FontWeight', 'bold');
-title('Scatter Plot','FontSize', 15,'FontWeight', 'bold');
-fig2pdf(gcf,'scatterplot_truth_pt_over_reco_pt.pdf');
 return
-
-%input_labels = {sprintf('((reco_pt-%1.6f)*%1.6f)', ps.xoffset(1), ps.gain(1))};
-% export a formula
-fprintf('Export Formula\n');
-Formula_labels = {};
-for i = 1:length(select_inputs)
-    Formula_labels{i} = sprintf('((%s-%1.6f)*%1.6f)', inputs_label{i}, ps.xoffset(i), ps.gain(i));
-end
-
-fprintf('Out: %s\n',GetNNFormula(trained_nn,'TMath::TanH',Formula_labels));
-%fprintf('Out: %s\n',GetNNFormula(trained_nn,{'reco_norm'}));
-
-nn_resul = sim(trained_nn, inputs_norm(1));
-
-y1 = tansig(trained_nn.IW{1,:}*inputs_norm(1,:)' + trained_nn.b{1});
-m_resul = trained_nn.LW{2,:}*y1+ trained_nn.b{2};
-
-diff_resul = nn_resul - m_resul;
-fprintf('diff between results: %1.6f\n',diff_resul);
-
-
-fprintf('Exporting Functions\n');
-rmpath(genpath('functions'));
-
-fprintf('THE END!!!\n');
-
-
