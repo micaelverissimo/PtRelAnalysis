@@ -173,6 +173,8 @@ for i = 1:n_tests
     %fig2pdf(gcf,'scatterplot_truth_pt_over_moptruth_pt.pdf');
     %close(gcf);
 
+end
+return
 
     %input_labels = {sprintf('((reco_pt-%1.6f)*%1.6f)', ps.xoffset(1), ps.gain(1))};
     % export a formula
@@ -197,7 +199,4 @@ for i = 1:n_tests
     fprintf('Exporting Functions\n');
     rmpath(genpath('EFunctions'));
 
-
     fprintf('THE END!!!\n');
-end
-return
