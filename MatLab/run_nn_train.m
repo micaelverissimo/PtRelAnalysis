@@ -59,13 +59,13 @@ inputs_label = inputs_label(select_inputs);
  set(gca,'XTickLabel');
  set(gca,'YTickLabel',inputs_label);
  %rotateXLabels(gca,90); 
- fig2pdf(gcf,'autocorr.pdf');
+ %fig2pdf(gcf,'autocorr.pdf');
 % saveas(gcf,'autocorr.jpg');
 % close(gcf);
 
 % 3 - Split Training Sets (train, test, validation)
 
-n_tests = 10;
+n_tests = 2;
 CVO = cvpartition(size(inputs,1),'Kfold',n_tests); % split into n_tests tests
 for i = 1:n_tests
     fprintf('Split Training Sets\n');
