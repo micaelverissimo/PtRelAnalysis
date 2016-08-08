@@ -42,7 +42,7 @@ inputs_label = {'Pt_EM', 'Eta_EM', 'Phi_EM', 'E_EM', 'PtRel_EM', 'FracEM3', 'Fra
 clear('fid','C','input_file_name','inputs1','inputs2','inputs3','inputs4','inputs5','inputs6','inputs7','inputs8','inputs9','inputs10','inputs11', 'inputs12', 'inputs13', 'inputs14', 'inputs15', 'inputs16', 'inputs17', 'inputs18', 'inputs19', 'inputs20', 'inputs21', 'inputs22', 'inputs23', 'inputs24', 'inputs25', 'inputs26', 'inputs27', 'inputs28', 'inputs29', 'inputs30', 'inputs31', 'inputs32', 'inputs33', 'inputs34', 'inputs35' , 'inputs36', 'inputs37');
 
 
-select_inputs = [6 7 8 9 10 11 12 23 24 25 26 27 33 34 35 36 37]; % all
+select_inputs = [6 7 8 9 10 11 12 23 24 25 26 27 33]; % all
 %select_inputs = 1:size(inputs,2); % reco_pt
 
 
@@ -60,8 +60,8 @@ inputs_label = inputs_label(select_inputs);
  set(gca,'YTickLabel',inputs_label);
  %rotateXLabels(gca,90); 
  %fig2pdf(gcf,'autocorr.pdf');
-% saveas(gcf,'autocorr.jpg');
-% close(gcf);
+ %saveas(gcf,'autocorr.jpg');
+ %close(gcf);
 
 % 3 - Split Training Sets (train, test, validation)
 
@@ -144,7 +144,7 @@ for i = 1:n_tests
     [trained_nn, train_description] = train_neural_network(nn_inputs', nn_target', itrn, ival, itst, top, train_fnc, perf_fnc, act_fnc, n_epochs, show);
 
     nn_output = sim(trained_nn, inputs_norm');
-
+    break
 
     % 5 - Result Analysis
     fprintf('Result Analysis\n');
