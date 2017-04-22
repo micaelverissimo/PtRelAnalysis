@@ -24,7 +24,7 @@ def ClassDiameter(data,dataCenter):
     return max(phi)
 
 # use to calculate the intra class dispersion F_in
-def DistIntraClass(list_of_cluster):
+def DispIntraClass(list_of_cluster):
     dispIntra = 0
     for i in range(len(list_of_cluster)):
         dispIntra += DispTotal(list_of_cluster[i],Baricenter(list_of_cluster[i]),media='')
