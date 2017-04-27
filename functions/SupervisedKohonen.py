@@ -46,9 +46,10 @@ class KohonenNN(object):
     # not working
     def update_sinapses(self, sinapse_id, event, trn_params):
         self.sinapses[sinapse_id,:] = (self.sinapses[sinapse_id,:]+
-                                       trn_params.learning_rate*(event-self.sinapses[sinapse_id,:]))
+                                       trn_params.learning_rate*
+                                       (event-self.sinapses[sinapse_id,:]))
         
-    def fit(self, data, label, trn_params=None, sinapses=None):
+    def fit(self, data, label, trn_params = None, sinapses=None):
         if trn_params is None:
             trn_params = TrainParameters()
         
@@ -69,13 +70,8 @@ class KohonenNN(object):
         
         if self.sinapses is None:
             self.sinapses = np.array([[-3.342,  -2.433 ],[3.465,  2.456]])
-           # print self.sinapses
-        
+            
         for ievent in range(trn_data.shape[0]):
-            #print self.sinapses[label[ievent],:]
-            #sinapses[label[ievent],:] = (sinapses[label[ievent],:]+trn_params.learning_rate*(trn_data[ievent,:]-sinapses[label[ievent],:]))
-            self.update_sinapses(label[ievent],trn_data[ievent,:],trn_params)
-            #print label[ievent]
-           # print self.sinapses
+            self.update_sinapses(label[ievent],trn_data[ievent,:],trn_params = trn_params)
             
         return self.sinapses
