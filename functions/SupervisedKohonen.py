@@ -74,10 +74,14 @@ class KohonenNN(object):
         print "Number of events:",trn_data.shape[0]
         
         if sinapses is None:
-            self.sinapses = np.array([[-3.342,  -2.433 ],[3.465,  2.456]])
+            # create randomic sinapses
+            self.sinapses = np.random.random_sample((len(np.unique(label)),data.shape[1]))
         else:
             self.sinapses = sinapses
-            
+        
+        print 'Start with:'
+        print self.sinapses
+        
         for ievent in range(trn_data.shape[0]):
             self.update_sinapses(trg_label[ievent],trn_data[ievent,:],trn_params = trn_params)
             
@@ -98,18 +102,17 @@ class KohonenNN(object):
  
         return predicted_label
     
-    def refit(self,data,trn_params= None, sinapses = None):
-        if self.sinapses is None:
-            print 'We need sinapses'
-        else:
-            self.sinapses=sinapses
-            
-        for ievent in range(data.shape[0]):
-            mat_dist = np.zeros([self.sinapses.shape[0]])
-            for isinapse in range(self.sinapses.shape[0]):
-            	mat_dist[isinapse] = self.calc_dist(data[ievent],self.sinapses[isinapse,:])
-            	update_sinapse_id = np.argmin(mat_dist)
-            	self.update_sinapses(update_sinapse_id,data[ievent,:],trn_params=trn_params)
-
-        return self.sinapses
+    #def refit(self,data,trn_params= None, sinapses = None):
+    #    if self.sinapses is None:
+    #        print 'We need sinapses'
+    #    else:
+    #        self.sinapses=sinapses
+    #        
+    #    for ievent in range(data.shape[0]):
+    #        mat_dist = np.zeros([self.sinapses.shape[0]])
+    #        for isinapse in range(self.sinapses.shape[0]):
+    #        	mat_dist[isinapse] = self.calc_dist(data[ievent],self.sinapses[isinapse,:])
+    #        	update_sinapse_id = np.argmin(mat_dist)
+    #        	self.update_sinapses(update_sinapse_id,data[ievent,:],trn_params=trn_params)
+    #    return self.sinapses
                 

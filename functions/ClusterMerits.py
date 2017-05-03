@@ -1,5 +1,6 @@
 import numpy as np
 from numpy import linalg as LA
+from scipy.stats.mstats import gmean
 
 # use to calculate the baricenter of a class or all data set
 def Baricenter(data):
@@ -36,3 +37,18 @@ def DispInterClass(list_of_cluster,dataSet):
     for i in range(len(list_of_cluster)):
         DispInter += list_of_cluster[i].shape[0]*(LA.norm(Baricenter(list_of_cluster[i])-Baricenter(dataSet))**2)
     return DispInter
+
+# ================================================================== acc and SP ===================================
+# measure accuracy of each class
+def Acc(output,true_label):
+    acc = np.zeros(len(np.unique(output)))
+    for i in range(len(np.unique(output))):
+        acc[i] = float(np.sum(output[true_label==i]==i))/(np.sum(true_label==i))
+    return acc
+
+# Calculate the sum-product
+def SP(output,true_label):
+    
+    SP = np.power(np.mean(Acc(output,true_label))*gmean(Acc(output,true_label)),0.5)
+    
+    return SP
