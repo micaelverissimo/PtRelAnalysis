@@ -60,18 +60,56 @@ class KohonenNN(object):
             if data.shape[0] < data.shape[1]:
                 trn_data = data[:,np.random.permutation(data.shape[1])].T
             else:
-                trn_data = data[np.random.permutation(data.shape[0]),:]
+                #trn_data = data[np.random.permutation(data.shape[0]),:]
+                indices = np.arange(data.shape[0])
+                np.random.shuffle(indices)
+                trn_data = data[indices]
+                trg_label = label[indices]
         else:
             if data.shape[0] < data.shape[1]:
                 trn_data = data.T
             else:
                 trn_data = data
+                trg_label = label
         print "Number of events:",trn_data.shape[0]
         
-        if self.sinapses is None:
+        if sinapses is None:
             self.sinapses = np.array([[-3.342,  -2.433 ],[3.465,  2.456]])
+        else:
+            self.sinapses = sinapses
             
         for ievent in range(trn_data.shape[0]):
-            self.update_sinapses(label[ievent],trn_data[ievent,:],trn_params = trn_params)
+            self.update_sinapses(trg_label[ievent],trn_data[ievent,:],trn_params = trn_params)
             
         return self.sinapses
+    
+    def predict(self,data):
+        if self.sinapses is None:
+            print 'No training'
+            return     
+            
+        predicted_label = np.zeros(data.shape[0])       
+        
+        for ievent in range(data.shape[0]):
+            mat_dist = np.zeros([self.sinapses.shape[0]])
+            for isinapse in range(self.sinapses.shape[0]):
+            	mat_dist[isinapse] = self.calc_dist(data[ievent],self.sinapses[isinapse,:])
+                predicted_label[ievent] = np.argmin(mat_dist)
+ 
+        return predicted_label
+    
+    def refit(self,data,trn_params= None, sinapses = None):
+        if self.sinapses is None:
+            print 'We need sinapses'
+        else:
+            self.sinapses=sinapses
+            
+        for ievent in range(data.shape[0]):
+            mat_dist = np.zeros([self.sinapses.shape[0]])
+            for isinapse in range(self.sinapses.shape[0]):
+            	mat_dist[isinapse] = self.calc_dist(data[ievent],self.sinapses[isinapse,:])
+            	update_sinapse_id = np.argmin(mat_dist)
+            	self.update_sinapses(update_sinapse_id,data[ievent,:],trn_params=trn_params)
+
+        return self.sinapses
+                
