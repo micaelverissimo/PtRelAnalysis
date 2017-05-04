@@ -79,13 +79,13 @@ class KohonenNN(object):
         else:
             self.sinapses = sinapses
         
-        print 'Start with:'
-        print self.sinapses
+        #print 'Start with:'
+        #print self.sinapses
         
         for ievent in range(trn_data.shape[0]):
             self.update_sinapses(trg_label[ievent],trn_data[ievent,:],trn_params = trn_params)
             
-        return self.sinapses
+
     
     def predict(self,data):
         if self.sinapses is None:
