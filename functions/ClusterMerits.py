@@ -44,7 +44,7 @@ def DispInterClass(list_of_cluster,dataSet):
 def Acc(output,true_label):
     acc = np.zeros(len(np.unique(output)))
     for i in range(len(np.unique(output))):
-        acc[i] = float(np.sum(output[true_label==i]==i))/(np.sum(true_label==i))
+        acc[i] = float(np.sum(output[true_label==i]==i))/float((np.sum(true_label==i)))
     return acc
 
 # Calculate the sum-product
