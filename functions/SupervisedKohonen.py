@@ -3,6 +3,7 @@
 """
 
 import numpy as np
+import joblib
 
 class TrainParameters(object):
     
@@ -43,7 +44,7 @@ class KohonenNN(object):
         if self.dist == 'euclidean':
             return np.linalg.norm((pt1-pt2), ord=2)
         
-    # not working
+        
     def update_sinapses(self, sinapse_id, event, trn_params):
         self.sinapses[sinapse_id,:] = (self.sinapses[sinapse_id,:]+
                                        trn_params.learning_rate*
@@ -102,6 +103,8 @@ class KohonenNN(object):
  
         return predicted_label
     
+    def save_model(self,save_path):
+        joblib.dump(KohonenNN,save_path)
     #def refit(self,data,trn_params= None, sinapses = None):
     #    if self.sinapses is None:
     #        print 'We need sinapses'

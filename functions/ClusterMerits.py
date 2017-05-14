@@ -8,8 +8,9 @@ def Baricenter(data):
     return dataCenter
 
 # use to calculate the total dispersion of a class or all data set F_0 or the mean dispersion
-def DispTotal(data,dataCenter,media = 'm'):
+def DispTotal(data,media = ''):
     dispTotal = 0
+    dataCenter = Baricenter(data)
     for i in range(data.shape[0]):
         dispTotal += LA.norm(data[i,:]-dataCenter) ** 2
     if (media == 'm'):
@@ -28,14 +29,14 @@ def ClassDiameter(data,dataCenter):
 def DispIntraClass(list_of_cluster):
     dispIntra = 0
     for i in range(len(list_of_cluster)):
-        dispIntra += DispTotal(list_of_cluster[i],Baricenter(list_of_cluster[i]),media='')
+        dispIntra += DispTotal(list_of_cluster[i],Baricenter(list_of_cluster[i]))
     return dispIntra
 
 # use to calculate the inter class dispersion F_out
 def DispInterClass(list_of_cluster,dataSet):
     DispInter = 0
     for i in range(len(list_of_cluster)):
-        DispInter += list_of_cluster[i].shape[0]*(LA.norm(Baricenter(list_of_cluster[i])-Baricenter(dataSet))**2)
+        DispInter += float(list_of_cluster[i].shape[0]*(LA.norm(Baricenter(list_of_cluster[i])-Baricenter(dataSet))**2))
     return DispInter
 
 # ================================================================== acc and SP ===================================
