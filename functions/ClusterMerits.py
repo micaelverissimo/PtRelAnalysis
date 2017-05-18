@@ -14,7 +14,7 @@ def DispTotal(data,media = ''):
     for i in range(data.shape[0]):
         dispTotal += LA.norm(data[i,:]-dataCenter) ** 2
     if (media == 'm'):
-        return dispTotal/data.shape[0]
+        return dispTotal/float(data.shape[0])
     else:
         return dispTotal
 
@@ -29,7 +29,7 @@ def ClassDiameter(data,dataCenter):
 def DispIntraClass(list_of_cluster):
     dispIntra = 0
     for i in range(len(list_of_cluster)):
-        dispIntra += DispTotal(list_of_cluster[i],Baricenter(list_of_cluster[i]))
+        dispIntra += DispTotal(list_of_cluster[i],media= '')
     return dispIntra
 
 # use to calculate the inter class dispersion F_out
@@ -50,6 +50,6 @@ def Acc(output,true_label):
 # Calculate the sum-product
 def SP(output,true_label):
     
-    SP = np.power(np.mean(Acc(output,true_label))*gmean(Acc(output,true_label)),0.5)
+    SP = np.sqrt(np.mean(Acc(output,true_label))*gmean(Acc(output,true_label)))
     
     return SP
