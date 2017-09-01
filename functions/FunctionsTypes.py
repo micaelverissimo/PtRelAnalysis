@@ -17,6 +17,28 @@ class Gauss:
 # done function
 # done class
 
+class Rayleigh:
+    def __call__(self,x,par):
+        rayleigh_pdf= par[1]*(x[0]/math.pow(par[0],2))*math.exp(-math.pow(0.5*x[0]/par[0],2)) 
+        
+        return rayleigh_pdf
+
+
+class Uniform:
+    def __call__(self,x,par):
+        uniform_pdf = par[3]*ROOT.Math.uniform_pdf(x[0],par[0],par[1],par[2])
+        return uniform_pdf
+
+class Laplace:
+    def __call__( self, x, par ):
+        laplace_pdf=par[2]*(1/par[1])*math.exp(-(math.fabs(x[0]-par[0]))/par[1])
+        return laplace_pdf 
+
+class ChiSquared:
+    def __call__(self, x, par):
+        chi_squared_pdf = par[2]*ROOT.Math.chisquared_pdf(x[0],par[0],par[1])
+        return chi_squared_pdf
+    
 class Bukin:
     def __call__( self, x, par ):
         
@@ -89,7 +111,7 @@ class Bukin:
         
         if xx<x1:
             # Left Side
-            r2=rhoL*math.pow((xx-x1)/(x0-x1),2)-r3+4*r3*(xx-x1)/hp*r5*r4/math.pow((r4-xi),2)
+            r2=rhoL*math.pow((xx-x1)/(x0-x1),2)-r3+4*r3*(xx-x1)/hp*r5*r4/(math.pow((r4-xi),2))
         elif xx < x2:
             # Centre
             if abs(xi)>math.exp(-6.):
