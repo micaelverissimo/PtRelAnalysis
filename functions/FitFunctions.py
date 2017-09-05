@@ -1,5 +1,5 @@
 import ROOT
-
+import numpy as np
 from FunctionsTypes import *
 
 def fitBukin(hist,min,max,fit_type):
@@ -46,9 +46,9 @@ def fitGauss(histogram,min,max,fit_options):
 def fitRayleigh(histogram,min,max,fit_options):
     number_of_parameters_rayleigh = 2
     f=ROOT.TF1("rayleigh",Rayleigh(),min,max,number_of_parameters_rayleigh)
-    
+    norm = histogram.GetBinCenter(histogram.GetMaximumBin())
     # Default Parameters
-    f.SetParameter(1,1.51) # normalization Factor
+    f.SetParameter(1,norm) # normalization Factor
     f.SetParameter(0,1.0)# scale of standard raylaigh distribution 
      #   f.SetParameter(1,0)
      #   f.SetParameter(2,1)
@@ -64,12 +64,12 @@ def fitRayleigh(histogram,min,max,fit_options):
 def fitUniform(histogram,min,max,fit_options):
     number_of_parameters_uniform = 4
     f=ROOT.TF1("uniform",Uniform(),min,max,number_of_parameters_uniform)
-    
+    norm =1.0/histogram.GetEntries()
     # Default Parameters
-    f.SetParameter(0,0.0)# scale of standard uniform distribution
-    f.SetParameter(1,1.0)# scale of standard uniform distribution
-    f.SetParameter(2,0.0)# scale of standard uniform distribution
-    f.SetParameter(3,1.0)# Normalization Factor
+    f.SetParameter(0,-2.0)# scale of standard uniform distribution
+    f.SetParameter(1,2.0)# scale of standard uniform distribution
+    f.SetParameter(2,4.0)# scale of standard uniform distribution
+    f.SetParameter(3,4.0)# Normalization Factor
  
     
     histogram.Fit("uniform",fit_options)
@@ -99,11 +99,11 @@ def fitLaplace(histogram,min,max,fit_options):
 def fitChiSquared(histogram,min,max,fit_options):
     number_of_parameters_chi_squared = 3
     f=ROOT.TF1("chi squared",ChiSquared(),min,max,number_of_parameters_chi_squared)
-    
+    norm = histogram.GetBinCenter(histogram.GetMaximumBin())
     # Default Parameters
     f.SetParameter(0,4.0)# scale of standard Chi Squared distribution (for Work only)
-    f.SetParameter(1,0.0)# scale of standard Chi Squared distribution (for Work only)
-    f.SetParameter(2,1.0)# normalization Factor
+    #f.SetParameter(1,0.0)# scale of standard Chi Squared distribution (for Work only)
+    f.SetParameter(1,norm)# normalization Factor
     
     
     histogram.Fit("chi squared",fit_options)

@@ -26,8 +26,13 @@ class Rayleigh:
 
 class Uniform:
     def __call__(self,x,par):
-        uniform_pdf = par[3]*ROOT.Math.uniform_pdf(x[0],par[0],par[1],par[2])
-        return uniform_pdf
+        #uniform_pdf = par[2]*ROOT.Math.uniform_pdf(x[0],par[0],par[1],0
+        par[2] = par[1]-par[0]
+        if x[0]>=par[0] and x[0]<=par[1]:
+            uniform_pdf = (1/(par[1]-par[0]))
+        else:
+            uniform_pdf = 0.0
+        return par[3]*uniform_pdf
 
 class Laplace:
     def __call__( self, x, par ):
@@ -36,7 +41,10 @@ class Laplace:
 
 class ChiSquared:
     def __call__(self, x, par):
-        chi_squared_pdf = par[2]*ROOT.Math.chisquared_pdf(x[0],par[0],par[1])
+        if x[0]>=0:
+            chi_squared_pdf = par[1]*ROOT.Math.chisquared_pdf(x[0],par[0],0)
+        else:
+            chi_squared_pdf = 0.0
         return chi_squared_pdf
     
 class Bukin:
