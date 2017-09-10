@@ -7,7 +7,7 @@ def fitBukin(hist,min,max,fit_type):
     f=ROOT.TF1("bukin",Bukin(),min,max,n_par_bukin)
     
     # Default Parameters
-    if hist.GetName().find('trut') !=-1:
+    if hist.GetName().find('Truth') !=-1:
         print hist.GetName()
         f.SetParameter(0,0.1) # norm
     else:
