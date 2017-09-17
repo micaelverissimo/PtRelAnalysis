@@ -186,7 +186,7 @@ def DrawList1DHistInCanvas(clone_list, ntitle, nxlabel, nylabel, canvas):
         clone_list[i].GetXaxis().SetTitleOffset(1.2)
         clone_list[i].GetYaxis().SetTitleOffset(1.4)
         clone_list[i].SetFillStyle(0)
-        clone_list[i].SetLineWidth(1)
+        clone_list[i].SetLineWidth(2)
         clone_list[i].Draw("same")
         #list_hist[i].SetTitle(aux)    
         #list_hist[i].GetXaxis().SetTitle(xaux)
