@@ -10,7 +10,7 @@
 
 
 # IPython notebook checkpoints
-*/.ipynb_checkpoints
+.ipynb_checkpoints/*
 
 # Result Folders
 Results/*
