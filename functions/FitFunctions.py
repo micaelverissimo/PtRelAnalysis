@@ -66,10 +66,9 @@ def fitUniform(histogram,min,max,fit_options):
     f=ROOT.TF1("uniform",Uniform(),min,max,number_of_parameters_uniform)
     norm =1.0/histogram.GetEntries()
     # Default Parameters
-    f.SetParameter(0,-2.0)# scale of standard uniform distribution
-    f.SetParameter(1,2.0)# scale of standard uniform distribution
+    f.SetParameter(0,-1.5)# scale of standard uniform distribution
+    f.SetParameter(1,1.5)# scale of standard uniform distribution
     f.SetParameter(2,4.0)# scale of standard uniform distribution
-    f.SetParameter(3,4.0)# Normalization Factor
  
     
     histogram.Fit("uniform",fit_options)
@@ -108,6 +107,26 @@ def fitChiSquared(histogram,min,max,fit_options):
     
     histogram.Fit("chi squared",fit_options)
     f_fit = histogram.GetFunction("chi squared")
+    
+    f_fit.SetLineWidth(histogram.GetLineWidth())
+    f_fit.SetLineColor(histogram.GetLineColor())
+    return f_fit
+
+def fitCrystalball(histogram,min,max,fit_options):
+    number_of_parameters_chi_squared = 5
+    f=ROOT.TF1("crystal ball",CrystalBall(),min,max,number_of_parameters_chi_squared)
+    #norm = histogram.GetBinCenter(histogram.GetMaximumBin())
+    # Default Parameters
+    f.SetParameter(0,0.0)# scale of standard Chi Squared distribution (for Work only)
+    f.SetParameter(1,1.0)# scale of standard Chi Squared distribution (for Work only)
+    f.SetParameter(2,1.5)# scale of standard Chi Squared distribution (for Work only)
+    f.SetParameter(3,9.0)# scale of standard Chi Squared distribution (for Work only)
+    f.SetParameter(4,1.0)# scale of standard Chi Squared distribution (for Work only)
+    #f.SetParameter(1,norm)# normalization Factor
+    
+    
+    histogram.Fit("crystal ball",fit_options)
+    f_fit = histogram.GetFunction("crystal ball")
     
     f_fit.SetLineWidth(histogram.GetLineWidth())
     f_fit.SetLineColor(histogram.GetLineColor())

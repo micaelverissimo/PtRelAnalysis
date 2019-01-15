@@ -47,6 +47,32 @@ class ChiSquared:
             chi_squared_pdf = 0.0
         return chi_squared_pdf
     
+    
+class CrystalBall:
+    def __call__(self,x,par):
+        mean =par[0]
+        sigma=par[1]
+        n=par[2]
+        alpha=par[3]
+        scale=par[4]
+        
+        if sigma < 0.:
+            return 0.
+        z = (x[0]-mean)/sigma
+        abs_alpha = float(abs(alpha))
+        C = n/abs_alpha * 1/(n-1) * math.exp(-(pow(abs_alpha,2))/2)
+        D = math.sqrt(math.pi/2)*(1+ROOT.Math.erf(abs_alpha/math.sqrt(2)))
+        N = 1/(sigma*(C+D))
+        if z > -alpha:
+            func = N*math.exp(-0.5*pow(z,2)) 
+        else:
+            A = math.pow(n/abs_alpha,n)*(math.exp(-0.5*math.pow(abs_alpha,2)))
+            B = n/abs_alpha - abs_alpha
+            func = N*A*(1/math.pow((B-z),n))
+        return scale*func
+    
+    
+    
 class Bukin:
     def __call__( self, x, par ):
         
